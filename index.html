@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>松風茶寮・五子棋</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap');
+:root{--gold:#d7bd86;--cream:#f1e4c8;--ink:#1d2822;--green:#20362c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:#f7efdf;font-family:"Noto Serif TC","Microsoft JhengHei",serif;background:
+linear-gradient(90deg,rgba(13,25,20,.90),rgba(21,30,24,.68) 48%,rgba(19,24,19,.88)),
+radial-gradient(ellipse at 80% 15%,#74836a 0%,transparent 30%),
+repeating-linear-gradient(90deg,#38281d 0 4px,#493427 4px 9px);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background:repeating-linear-gradient(0deg,transparent 0 80px,#b69a6c 81px,#b69a6c 82px,transparent 83px 160px)}
+.shell{width:min(1160px,100%);margin:auto;padding:28px 22px 34px}
+.top{text-align:center;margin-bottom:22px}.kicker{font-size:11px;letter-spacing:.48em;color:#cdb783}.top h1{font-size:clamp(30px,5vw,48px);letter-spacing:.18em;margin:8px 0 3px;font-weight:600;text-shadow:0 5px 18px #0008}.top p{color:#c9bea7;font-size:13px;letter-spacing:.18em;margin:0}
+.content{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:center}
+.board-frame{position:relative;padding:clamp(14px,3vw,30px);border-radius:25px;background:linear-gradient(145deg,#a87548,#674027 48%,#3a2519);box-shadow:0 28px 55px #0009,inset 0 2px 3px #f0c58d88,inset 0 -9px 18px #1b100a;transform:perspective(1100px) rotateX(1.5deg)}
+.board-frame:after{content:"";position:absolute;left:7%;right:7%;bottom:-12px;height:18px;border-radius:0 0 16px 16px;background:linear-gradient(#53341f,#24170f);filter:drop-shadow(0 9px 7px #0008);z-index:-1}
+.board{display:grid;grid-template-columns:repeat(15,1fr);aspect-ratio:1;padding:5.2%;border-radius:7px;position:relative;background:radial-gradient(ellipse at 30% 22%,#f8e6b8,#e5c58e 54%,#c99a5b);box-shadow:inset 0 3px 8px #fff7d6aa,inset 0 -7px 12px #79502c77,0 4px 9px #21140c}
+.board:before{content:"";position:absolute;inset:5.2%;background-image:linear-gradient(#79542f 1px,transparent 1px),linear-gradient(90deg,#79542f 1px,transparent 1px);background-size:calc(100% / 14) calc(100% / 14);pointer-events:none}
+.cell{border:0;background:transparent;position:relative;z-index:1;min-width:0;padding:0;display:grid;place-items:center;cursor:pointer}
+.cell:focus-visible{outline:2px solid #8a5527;border-radius:50%}.stone{width:76%;aspect-ratio:1;border-radius:50%;display:block;animation:pop .16s ease-out;position:relative}
+.stone.black{background:radial-gradient(circle at 30% 24%,#777 0%,#333 26%,#090a09 76%);box-shadow:0 4px 5px #3b291e88,inset 0 2px 3px #aaa8}
+.stone.white{background:radial-gradient(circle at 30% 24%,#fff 0%,#f5f0e5 46%,#b9b2a5 100%);box-shadow:0 4px 5px #3b291e88,inset 0 2px 3px #fff}
+.stone.last:after{content:"";position:absolute;inset:38%;border-radius:50%;background:#b43c2b;box-shadow:0 0 0 2px #f5dfb0}
+@keyframes pop{from{transform:scale(.3) translateY(-5px);opacity:.3}to{transform:scale(1);opacity:1}}
+.side{display:flex;flex-direction:column;gap:14px}.card{border:1px solid #c4a97642;border-radius:18px;padding:20px;background:linear-gradient(150deg,rgba(43,62,50,.96),rgba(24,38,31,.97));box-shadow:0 16px 32px #0006,inset 0 1px #ffffff17}
+.card h2{margin:0 0 15px;color:#dfc996;font-size:16px;letter-spacing:.16em;font-weight:500}.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choice{border:1px solid #9f956d66;border-radius:9px;background:#ffffff08;color:#d7d0bd;padding:10px 6px;font:inherit;font-size:13px;cursor:pointer}
+.choice.active{background:linear-gradient(#a98b58,#745b37);color:#fff4dc;border-color:#e1c58d;box-shadow:0 3px 10px #0004}
+.field{margin-top:15px}.field label{display:block;color:#bdb49e;font-size:12px;margin-bottom:7px;letter-spacing:.1em}
+select{width:100%;border:1px solid #aa986d88;border-radius:9px;background:#17271f;color:#f2e5c9;padding:11px;font:inherit;font-size:13px;outline:none}
+.turn{display:flex;align-items:center;gap:10px;font-size:14px;color:#f2e8d5}.disc{width:19px;height:19px;border-radius:50%;box-shadow:0 3px 5px #0008,inset 0 2px 2px #fff6}.disc.black{background:radial-gradient(circle at 30% 25%,#777,#090909 70%)}.disc.white{background:radial-gradient(circle at 30% 25%,#fff,#b7b0a3)}
+#message{font-size:13px;line-height:1.8;color:#d7cdb7;min-height:48px;margin-top:13px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.action{border:1px solid #c8ae7c;color:#f6ebd4;background:linear-gradient(#8b7047,#60482d);border-radius:9px;padding:11px 8px;cursor:pointer;font:inherit;font-size:13px;box-shadow:0 4px 0 #382819,0 7px 12px #0004}.action:active{transform:translateY(3px);box-shadow:0 1px 0 #382819}.action.secondary{background:#ffffff0b;border-color:#9b987a;color:#d8cfb9;box-shadow:none}
+.tip{font-size:11px;line-height:1.8;color:#a9ad98;margin-top:13px}.ornament{text-align:center;color:#bca77c;font-size:12px;letter-spacing:.35em;margin-top:24px}
+@media(max-width:800px){.content{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.card:first-child{grid-column:1/-1}.shell{padding:20px 12px}.board-frame{max-width:650px;margin:auto;width:100%}}
+@media(max-width:480px){.side{grid-template-columns:1fr}.card:first-child{grid-column:auto}.card{padding:16px}}
+</style></head>
+<body><main class="shell">
+<header class="top"><div class="kicker">THE PINE BREEZE TEA HOUSE</div><h1>松風茶寮・五子棋</h1><p>以棋會友・靜心落子</p></header>
+<section class="content">
+<div class="board-frame"><div class="board" id="board" aria-label="五子棋棋盤"></div></div>
+<aside class="side">
+<section class="card"><h2>對弈設定</h2>
+<div class="mode"><button class="choice active" id="aiMode">人機對弈</button><button class="choice" id="twoMode">雙人對弈</button></div>
+<div class="field" id="levelField"><label for="level">選擇電腦棋力</label><select id="level">
+<option value="1">入門・初學茶友</option><option value="2">簡單・悠閒對弈</option><option value="3" selected>中級・沉穩棋手</option><option value="4">困難・高手過招</option><option value="5">大師・棋藝切磋</option></select></div>
+<div class="tip">五種難度由淺入深。電腦會觀察攻防、尋找連線機會；大師級會更積極計算局面。</div>
+</section>
+<section class="card"><h2>棋局資訊</h2><div class="turn"><span class="disc black" id="turnDisc"></span><span id="turnText">黑棋回合</span></div><div id="message" aria-live="polite">黑棋先行。請在棋盤交叉點落子。</div>
+<div class="actions"><button class="action" id="restart">重新開局</button><button class="action secondary" id="undo">悔棋</button></div>
+<div class="tip">黑棋先行 · 先連成五子者獲勝<br>悔棋可退回上一手；人機模式會一起撤回電腦回合。</div>
+</section>
+</aside></section><div class="ornament">茶香 · 松影 · 棋韻</div></main>
+<script>
+(() => {
+const N=15, boardEl=document.getElementById('board'), message=document.getElementById('message');
+const turnDisc=document.getElementById('turnDisc'),turnText=document.getElementById('turnText');
+let board,turn,moves,over,mode='ai',busy=false,last=null;
+const dirs=[[1,0],[0,1],[1,1],[1,-1]];
+function init(){board=Array.from({length:N},()=>Array(N).fill(0));turn=1;moves=[];over=false;busy=false;last=null;render();say('黑棋先行。請在棋盤交叉點落子。');}
+function say(t){message.textContent=t;turnDisc.className='disc '+(turn===1?'black':'white');turnText.textContent=over?'對局結束':(turn===1?'黑棋回合':'白棋回合');}
+function render(){boardEl.innerHTML='';for(let r=0;r<N;r++)for(let c=0;c<N;c++){let b=document.createElement('button');b.className='cell';b.type='button';b.setAttribute('aria-label',`${r+1}行${c+1}列`);if(board[r][c]){let s=document.createElement('span');s.className='stone '+(board[r][c]===1?'black':'white')+((last&&last[0]===r&&last[1]===c)?' last':'');b.appendChild(s);}b.addEventListener('click',()=>humanPlay(r,c));boardEl.appendChild(b);}}
+function win(r,c,p){return dirs.some(([dr,dc])=>{let n=1;for(let z of [-1,1]){let y=r+dr*z,x=c+dc*z;while(y>=0&&y<N&&x>=0&&x<N&&board[y][x]===p){n++;y+=dr*z;x+=dc*z;}}return n>=5;});}
+function put(r,c,p){board[r][c]=p;moves.push([r,c,p]);last=[r,c];turn=-p;if(win(r,c,p)){over=true;render();say((p===1?'黑棋':'白棋')+'連成五子，恭喜獲勝！');return true;}if(moves.length===N*N){over=true;render();say('棋盤已滿，平局！');return true;}render();say('輪到'+(turn===1?'黑棋':'白棋')+'。');return false;}
+function humanPlay(r,c){if(over||busy||board[r][c]!==0||(mode==='ai'&&turn!==1))return;let done=put(r,c,turn);if(!done&&mode==='ai'){busy=true;say('茶友思考中……');setTimeout(()=>{if(!over){let [y,x]=chooseMove(Number(document.getElementById('level').value));put(y,x,-1);}busy=false;},180);}}
+function lineScore(count,open){if(count>=5)return 10000000;if(count===4&&open===2)return 1200000;if(count===4&&open===1)return 180000;if(count===3&&open===2)return 45000;if(count===3&&open===1)return 5000;if(count===2&&open===2)return 1800;if(count===2&&open===1)return 220;if(count===1&&open===2)return 18;return 0;}
+function evaluate(r,c,p){let total=0;for(const [dr,dc] of dirs){let count=1,open=0;for(const z of [-1,1]){let y=r+dr*z,x=c+dc*z;while(y>=0&&y<N&&x>=0&&x<N&&board[y][x]===p){count++;y+=dr*z;x+=dc*z;}if(y>=0&&y<N&&x>=0&&x<N&&board[y][x]===0)open++;}total+=lineScore(count,open);}return total;}
+function candidates(limit=12){let seen=new Set(),out=[];if(!moves.length)return [[7,7,0]];for(const [r,c] of moves)for(let y=Math.max(0,r-2);y<=Math.min(N-1,r+2);y++)for(let x=Math.max(0,c-2);x<=Math.min(N-1,c+2);x++)if(!board[y][x]){let k=y*N+x;if(!seen.has(k)){seen.add(k);let attack=evaluate(y,x,turn),defend=evaluate(y,x,-turn);out.push([y,x,Math.max(attack,defend*.94)+Math.min(attack,defend)*.12]);}}return out.sort((a,b)=>b[2]-a[2]).slice(0,limit);}
+function chooseMove(level){let opts=candidates(level<=2?18:level===3?13:10);if(level===1){let urgent=opts.filter(([r,c])=>evaluate(r,c,-1)>=180000||evaluate(r,c,1)>=180000);return (urgent.length?urgent:opts.slice(0,Math.min(8,opts.length)))[Math.floor(Math.random()*(urgent.length?urgent.length:Math.min(8,opts.length)))].slice(0,2);}
+let best=opts[0],bestVal=-Infinity;
+for(const [r,c] of opts){board[r][c]=-1;if(win(r,c,-1)){board[r][c]=0;return [r,c];}let val=evaluate(r,c,-1)*1.08+evaluate(r,c,1)*1.02;board[r][c]=0;if(val>bestVal){bestVal=val;best=[r,c];}}
+if(level>=3){let depth=level===3?1:level===4?2:2,beam=level===5?7:5;let root=opts.slice(0,beam);bestVal=-Infinity;for(const [r,c] of root){board[r][c]=-1;let val=search(depth-1,-Infinity,Infinity,1,beam);board[r][c]=0;if(val>bestVal){bestVal=val;best=[r,c];}}}
+return best.slice(0,2);}
+function search(depth,alpha,beta,p,beam){if(depth===0)return staticEval();let opts=candidates(beam);if(!opts.length)return 0;let maximizing=p===-1,best=maximizing?-Infinity:Infinity;for(const [r,c] of opts){board[r][c]=p;if(win(r,c,p)){board[r][c]=0;return p===-1?9000000:-9000000;}let val=search(depth-1,alpha,beta,-p,beam);board[r][c]=0;if(maximizing){best=Math.max(best,val);alpha=Math.max(alpha,best);}else{best=Math.min(best,val);beta=Math.min(beta,best);}if(beta<=alpha)break;}return best;}
+function staticEval(){let s=0;for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(board[r][c])s+=board[r][c]===-1?evaluate(r,c,-1)*.20:-evaluate(r,c,1)*.20;return s;}
+function undo(){if(busy)return;if(!moves.length)return;let count=mode==='ai'?Math.min(2,moves.length):1;while(count--&&moves.length){let [r,c]=moves.pop();board[r][c]=0;}turn=moves.length%2===0?1:-1;over=false;last=moves.length?moves[moves.length-1].slice(0,2):null;render();say('已悔棋，輪到'+(turn===1?'黑棋':'白棋')+'。');}
+document.getElementById('restart').onclick=init;document.getElementById('undo').onclick=undo;
+document.getElementById('aiMode').onclick=()=>{mode='ai';document.getElementById('aiMode').classList.add('active');document.getElementById('twoMode').classList.remove('active');document.getElementById('levelField').style.display='block';init();};
+document.getElementById('twoMode').onclick=()=>{mode='two';document.getElementById('twoMode').classList.add('active');document.getElementById('aiMode').classList.remove('active');document.getElementById('levelField').style.display='none';init();};
+init();
+})();
+</script></body></html>
